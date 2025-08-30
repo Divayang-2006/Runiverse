@@ -18,8 +18,9 @@
       },
       "edgeToEdgeEnabled": true,
       "package": "com.imagine_x.Runiverse",
-      "permissions": ["ACCESS_FINE_LOCATION"]
-
+      "permissions": [
+        "ACCESS_FINE_LOCATION"
+      ]
     },
     "web": {
       "bundler": "metro",
@@ -37,7 +38,12 @@
           "backgroundColor": "#ffffff"
         }
       ],
-      ["@rnmapbox/maps"]
+      [
+        "@rnmapbox/maps",
+        {
+          "RNMapboxMapsDownloadToken": "sk.eyJ1IjoiaW1hZ2luZS14IiwiYSI6ImNtZXlzMDU0dzA5c3Yya3NnNTZsN3FiYTYifQ.IH5ATmHk2cFpldEa9Ps6ow"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
@@ -45,8 +51,9 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "36fc1e15-a891-46c0-a695-155f3172c710"
+        "projectId": "5233a97b-f485-4172-a36c-db748f469175"
       }
-    }
+    },
+    "owner": "imagine_x"
   }
 }
