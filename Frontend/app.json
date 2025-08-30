@@ -16,7 +16,10 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.imagine_x.Runiverse",
+      "permissions": ["ACCESS_FINE_LOCATION"]
+
     },
     "web": {
       "bundler": "metro",
@@ -33,10 +36,17 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
-      ]
+      ],
+      ["@rnmapbox/maps"]
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "36fc1e15-a891-46c0-a695-155f3172c710"
+      }
     }
   }
 }

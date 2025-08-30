@@ -2,6 +2,9 @@ import { Image, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { View, Text } from 'react-native'; // Using standard RN components
 import { mockGroups } from '@/services/leaderboardService';
+import Mapbox from "@rnmapbox/maps"
+Mapbox.setAccessToken("pk.eyJ1IjoiaW1hZ2luZS14IiwiYSI6ImNtZXhnemd6ODAwZXIyanF0ZWhqM3BrM2IifQ.Leh68KuE8z7Lm70Ce60NLA");
+
 
 export default function MapScreen() {
 
