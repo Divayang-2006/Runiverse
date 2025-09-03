@@ -52,37 +52,31 @@ const userSchema = new mongoose.Schema(
 );
 userSchema.index({ location: "2dsphere" });
 
-// Update steps (instead of direct modification)
 userSchema.methods.updateSteps = function (newSteps) {
   this.steps += newSteps;
   return this.save();
 };
 
-// Update distance
 userSchema.methods.updateDistance = function (newDistance) {
   this.distance += newDistance;
   return this.save();
 };
 
-// Claim a territory
 userSchema.methods.addTerritory = function () {
   this.territories += 1;
   return this.save();
 };
 
-// Release a territory
 userSchema.methods.removeTerritory = function () {
   if (this.territories > 0) this.territories -= 1;
   return this.save();
 };
 
-// Update user location
 userSchema.methods.updateLocation = function (lng, lat) {
   this.location = { type: "Point", coordinates: [lng, lat] };
   return this.save();
 };
 
-// Add badge reference (we’ll create Badge model next)
 userSchema.methods.addBadge = function (badgeId) {
   if (!this.badges) this.badges = [];
   this.badges.push(badgeId);

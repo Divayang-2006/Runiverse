@@ -12,12 +12,10 @@ import { authMiddleware } from "../middleware/auth.js";
 
 const router = express.Router();
 
-/* ---------------- TEST ROUTE ---------------- */
 router.get("/test", (req, res) => {
   res.send("User route is working");
 });
 
-/* ---------------- REGISTER ---------------- */
 router.post("/register", async (req, res) => {
   try {
     const { username, email, password } = req.body;
@@ -51,7 +49,6 @@ router.post("/register", async (req, res) => {
   }
 });
 
-/* ---------------- LOGIN ---------------- */
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -87,10 +84,9 @@ router.post("/login", async (req, res) => {
   }
 });
 
-/* ---------------- PROTECTED USER ROUTES ---------------- */
-router.get("/me", authMiddleware, getProfile);        // fetch profile
-router.put("/me", authMiddleware, updateProfile);     // update profile
-router.put("/stats", authMiddleware, updateStats);    // update fitness stats
-router.post("/badges", authMiddleware, addBadge);     // award badge
+router.get("/me", authMiddleware, getProfile);   
+router.put("/me", authMiddleware, updateProfile);
+router.put("/stats", authMiddleware, updateStats); 
+router.post("/badges", authMiddleware, addBadge);   
 
 export default router;

@@ -1,4 +1,3 @@
-// src/models/Task.js
 import mongoose from "mongoose";
 
 const taskSchema = new mongoose.Schema(
@@ -16,7 +15,6 @@ const taskSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    // relation to User
     assignedTo: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
@@ -26,7 +24,6 @@ const taskSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// OOP-style methods
 taskSchema.methods.markCompleted = function () {
   this.isCompleted = true;
   return this.save();

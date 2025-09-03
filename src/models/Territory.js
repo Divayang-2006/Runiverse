@@ -1,4 +1,3 @@
-// src/models/Territory.js
 import mongoose from "mongoose";
 
 const territorySchema = new mongoose.Schema(
@@ -8,7 +7,6 @@ const territorySchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    // GeoJSON for map-based claiming
     location: {
       type: {
         type: String,
@@ -16,11 +14,10 @@ const territorySchema = new mongoose.Schema(
         default: "Point",
       },
       coordinates: {
-        type: [Number], // [longitude, latitude]
+        type: [Number],
         required: true,
       },
     },
-    // Claimed by user
     claimedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
@@ -29,13 +26,8 @@ const territorySchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-
-// Enable geospatial queries
 territorySchema.index({ location: "2dsphere" });
 
-/* ----------------- OOP-style methods ----------------- */
-
-// Claim territory
 territorySchema.methods.capture = function (userId) {
   if (this.claimedBy) {
     throw new Error("Territory already claimed");
@@ -44,7 +36,6 @@ territorySchema.methods.capture = function (userId) {
   return this.save();
 };
 
-// Release territory
 territorySchema.methods.release = function () {
   if (!this.claimedBy) {
     throw new Error("Territory is not claimed");

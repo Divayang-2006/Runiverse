@@ -4,7 +4,6 @@ import {
   getLeaderboardByTerritories,
 } from "../controllers/leaderboardController.js";
 const router = express.Router();
-// Leaderboards
 router.get("/distance", getLeaderboardByDistance);
 router.get("/territories", getLeaderboardByTerritories);
 

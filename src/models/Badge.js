@@ -1,4 +1,3 @@
-// src/models/Badge.js
 import mongoose from "mongoose";
 
 const badgeSchema = new mongoose.Schema(
@@ -13,10 +12,9 @@ const badgeSchema = new mongoose.Schema(
       default: "",
     },
     icon: {
-      type: String, // URL or file path for badge image
+      type: String,
       default: "",
     },
-    // Badge can be earned by multiple users
     users: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -27,9 +25,6 @@ const badgeSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-/* ----------------- OOP-style methods ----------------- */
-
-// Award badge to a user
 badgeSchema.methods.award = function (userId) {
   if (!this.users.includes(userId)) {
     this.users.push(userId);
@@ -37,7 +32,6 @@ badgeSchema.methods.award = function (userId) {
   return this.save();
 };
 
-// Remove badge from a user
 badgeSchema.methods.revoke = function (userId) {
   this.users = this.users.filter(
     (id) => id.toString() !== userId.toString()
