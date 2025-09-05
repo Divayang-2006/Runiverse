@@ -1,15 +1,22 @@
-import './global.css';
-import { useColorScheme } from 'react-native';
-import { Slot } from 'expo-router';
+import { Stack } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import { View } from "react-native";
+import "./global.css"; // Import NativeWind global styles
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
-
   return (
     <SafeAreaProvider>
-      {/* Any global providers would go here */}
-      <Slot />
+      {/* Set a global background color for the app */}
+      <View className="flex-1 bg-background-dark">
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="index" />
+          <Stack.Screen name="login" />
+          <Stack.Screen name="register" />
+        <Stack.Screen name="(tabs)" />
+        </Stack>
+        <StatusBar style="light" />
+      </View>
     </SafeAreaProvider>
   );
 }

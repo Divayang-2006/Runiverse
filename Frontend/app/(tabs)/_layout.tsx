@@ -1,23 +1,18 @@
 // app/(tabs)/_layout.tsx
 import { Tabs } from "expo-router";
 import { Home, Map, Trophy, Shield, User } from "lucide-react-native";
-import { useColorScheme } from "react-native";
 
 const TAB_ICON_SIZE = 28;
 
 export default function TabLayout() {
-   const colorScheme = useColorScheme();
-   const activeColor = colorScheme === "dark" ? "#FFF" : "#000";
-   const inactiveColor = colorScheme === "dark" ? "#9CA3AF" : "#6C757D";
-
    return (
       <Tabs
          screenOptions={{
-            tabBarActiveTintColor: activeColor,
-            tabBarInactiveTintColor: inactiveColor,
+            tabBarActiveTintColor: '#A8E063', // primary-green
+            tabBarInactiveTintColor: '#8E8E93', // text-secondary
             tabBarStyle: {
-               backgroundColor: colorScheme === "dark" ? "#1E1E1E" : "#FFFFFF",
-               borderTopColor: colorScheme === "dark" ? "#374151" : "#DEE2E6",
+               backgroundColor: '#1C1C1E', // background-dark
+               borderTopWidth: 0,
             },
             headerShown: false,
          }}

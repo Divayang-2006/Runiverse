@@ -1,56 +1,151 @@
+import React, { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { View, Text } from 'react-native';
-import Mapbox, { Camera, MapView, FillExtrusionLayer } from '@rnmapbox/maps';
+import { View, Text, StyleSheet } from 'react-native';
+import Mapbox, { Camera, MapView, UserLocation, ShapeSource, LineLayer, FillLayer } from '@rnmapbox/maps';
+import * as Location from 'expo-location';
 
 Mapbox.setAccessToken(
-   'sk.eyJ1IjoiaW1hZ2luZS14IiwiYSI6ImNtZXlzMDU0dzA5c3Yya3NnNTZsN3FiYTYifQ.IH5ATmHk2cFpldEa9Ps6ow'
+   'pk.eyJ1IjoiaW1hZ2luZS14IiwiYSI6ImNtZXhnemd6ODAwZXIyanF0ZWhqM3BrM2IifQ.Leh68KuE8z7Lm70Ce60NLA'
 );
 
+// Demo path: Gandhinagar landmarks
+const gandhinagarRoute: [number, number][] = [
+   [72.6369, 23.2156], // Akshardham Temple
+   [72.6425, 23.2101],
+   [72.6480, 23.2050],
+   [72.6517, 23.1902], // Infocity
+   [72.6565, 23.2239], // Mahatma Mandir
+   [72.6815, 23.2231], // Railway Station
+];
+
+
 export default function MapScreen() {
+   const [locationGranted, setLocationGranted] = useState(false);
+   const [location, setLocation] = useState<[number, number] | null>(null);
+   const [route, setRoute] = useState<[number, number][]>([]);
+   const [territories, setTerritories] = useState<any[]>([]);
+
+   useEffect(() => {
+      (async () => {
+         let { status } = await Location.requestForegroundPermissionsAsync();
+         if (status === "granted") {
+            setLocationGranted(true);
+         } else {
+            alert("Permission to access location was denied");
+         }
+      })();
+   }, []);
+
+   const isClosedLoop = (points: [number, number][]) => {
+      if (points.length < 4) return false;
+      const [lng1, lat1] = points[0];
+      const [lng2, lat2] = points[points.length - 1];
+      const dist = Math.sqrt((lng2 - lng1) ** 2 + (lat2 - lat1) ** 2);
+      return dist < 0.0005; // ~50m tolerance
+   };
+
+   useEffect(() => {
+      (async () => {
+         let { status } = await Location.requestForegroundPermissionsAsync();
+         if (status !== "granted") {
+            alert("Permission to access location was denied");
+            return;
+         }
+
+         Location.watchPositionAsync(
+            {
+               accuracy: Location.Accuracy.High,
+               timeInterval: 2000,
+               distanceInterval: 5,
+            },
+            (loc) => {
+               const coords: [number, number] = [
+                  loc.coords.longitude,
+                  loc.coords.latitude,
+               ];
+               setLocation(coords);
+
+               setRoute((prev) => {
+                  const newPath = [...prev, coords];
+
+                  // if loop closed → mark as territory
+                  if (isClosedLoop(newPath)) {
+                     setTerritories((prevTerritories) => [
+                        ...prevTerritories,
+                        {
+                           type: "Feature",
+                           geometry: {
+                              type: "Polygon",
+                              coordinates: [[...newPath, newPath[0]]], // close polygon
+                           },
+                        },
+                     ]);
+                     return []; // reset route after claiming
+                  }
+                  return newPath;
+               });
+            }
+         );
+      })();
+   }, []);
+
    return (
       <SafeAreaView style={{ flex: 1 }}>
-         <Text style={{ fontSize: 22, margin: 12 }}>Territories</Text>
-
+         <Text style={styles.title}>Gandhinagar Route</Text>
          <View style={{ flex: 1 }}>
-            <MapView
-               style={{ flex: 1 }}
-               styleURL={Mapbox.StyleURL.Dark} // Dark/Satellite works well for 3D buildings
-            >
-               <Camera
-                  zoomLevel={16}
-                  centerCoordinate={[72.8311, 21.1702]} // Mumbai
-                  pitch={75}
-                  bearing={20}
-               />
+            <MapView style={{ flex: 1 }} styleURL={Mapbox.StyleURL.Street}>
+               {/* Show current path */}
+               {route.length > 1 && (
+                  <ShapeSource
+                     id="routeSource"
+                     shape={{
+                        type: "Feature",
+                        geometry: {
+                           type: "LineString",
+                           coordinates: route,
+                        },
+                     }}
+                  >
+                     <LineLayer
+                        id="routeLine"
+                        style={{
+                           lineColor: "blue",
+                           lineWidth: 4,
+                        }}
+                     />
+                  </ShapeSource>
+               )}
 
-               {/* 3D Buildings */}
-               <FillExtrusionLayer
-                  id="3d-buildings"
-                  sourceID="composite"
-                  sourceLayerID="building"
-                  style={{
-                     fillExtrusionColor: '#aaa',
-                     fillExtrusionHeight: [
-                        'interpolate',
-                        ['linear'],
-                        ['zoom'],
-                        15,
-                        0,
-                        16,
-                        ['*', ['get', 'height'], 2], // multiply height by 2
-                     ],
-                     fillExtrusionBase: [
-                        'case',
-                        ['has', 'min_height'],
-                        ['*', ['get', 'min_height'], 2], // scale base too
-                        0,
-                     ],
-                     fillExtrusionOpacity: 0.8,
-                  }}
-               />
+               {/* Show captured territories */}
+               {territories.map((territory, index) => (
+                  <ShapeSource key={`territory-${index}`} id={`territory-${index}`} shape={territory}>
+                     <FillLayer
+                        id={`territory-fill-${index}`}
+                        style={{
+                           fillColor: "rgba(255,0,0,0.4)", // red with transparency
+                           fillOutlineColor: "red",
+                        }}
+                     />
+                  </ShapeSource>
+               ))}
 
+               {/* Show user */}
+               <UserLocation
+                  visible={true}
+                  showsUserHeadingIndicator={true}
+                  androidRenderMode="normal"
+               />
+               <Camera followUserLocation followZoomLevel={15} />
             </MapView>
          </View>
       </SafeAreaView>
    );
 }
+
+const styles = StyleSheet.create({
+   title: {
+      fontSize: 22,
+      margin: 12,
+      fontWeight: "600",
+   },
+});
