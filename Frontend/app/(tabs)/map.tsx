@@ -3,6 +3,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { View, Text, StyleSheet } from 'react-native';
 import Mapbox, { Camera, MapView, UserLocation, ShapeSource, LineLayer, FillLayer } from '@rnmapbox/maps';
 import * as Location from 'expo-location';
+import customMAP from '@/assets/Map_Json/customStyle.json';
 
 Mapbox.setAccessToken(
    'pk.eyJ1IjoiaW1hZ2luZS14IiwiYSI6ImNtZXhnemd6ODAwZXIyanF0ZWhqM3BrM2IifQ.Leh68KuE8z7Lm70Ce60NLA'
@@ -37,7 +38,7 @@ export default function MapScreen() {
    }, []);
 
    const isClosedLoop = (points: [number, number][]) => {
-      if (points.length < 4) return false;
+      if (points.length < 40) return false;
       const [lng1, lat1] = points[0];
       const [lng2, lat2] = points[points.length - 1];
       const dist = Math.sqrt((lng2 - lng1) ** 2 + (lat2 - lat1) ** 2);
@@ -93,8 +94,10 @@ export default function MapScreen() {
       <SafeAreaView style={{ flex: 1 }}>
          <Text style={styles.title}>Gandhinagar Route</Text>
          <View style={{ flex: 1 }}>
-            <MapView style={{ flex: 1 }} styleURL={Mapbox.StyleURL.Street}>
-               {/* Show current path */}
+            <MapView style={{ flex: 1 }} 
+            styleJSON={JSON.stringify(customMAP)}
+            // styleURL='mapbox://styles/imagine-x/cmf6z2psu000101qufhfo3hqs'
+            >
                {route.length > 1 && (
                   <ShapeSource
                      id="routeSource"
