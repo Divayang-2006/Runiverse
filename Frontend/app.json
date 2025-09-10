@@ -19,7 +19,8 @@
       "edgeToEdgeEnabled": true,
       "package": "com.imagine_x.Runiverse",
       "permissions": [
-        "ACCESS_FINE_LOCATION"
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION"
       ]
     },
     "web": {
@@ -42,6 +43,14 @@
         "@rnmapbox/maps",
         {
           "RNMapboxMapsDownloadToken": "sk.eyJ1IjoiaW1hZ2luZS14IiwiYSI6ImNtZXlzMDU0dzA5c3Yya3NnNTZsN3FiYTYifQ.IH5ATmHk2cFpldEa9Ps6ow"
+          // "RNMapboxMapsDownloadToken": "sk.eyJ1IjoiaW1hZ2luZS14IiwiYSI6ImNtZjc2aGcyZjBmc3QyanNoc2g1emF3c2MifQ.zKi3UPU5acHv3aeEIoOdSw"
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location.",
+          "locationWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location while the app is running."
         }
       ]
     ],

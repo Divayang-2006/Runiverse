@@ -4,6 +4,7 @@ import { StatCard } from "@/components/StatCard";
 import { useStore } from "@/store/useStore";
 import { Footprints, MapPin, Flame } from "lucide-react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useEffect, useState } from "react";
 
 const formatDistance = (meters: number) => (meters / 1000).toFixed(2);
 
