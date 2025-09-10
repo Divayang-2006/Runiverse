@@ -1,34 +1,70 @@
-import { StyledPressable, StyledText, StyledView } from "@/components/Styled";
-import { useStore } from "@/store/useStore";
-import { Image } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import React from 'react';
+import { View, Text, TouchableOpacity, Image } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Link } from 'expo-router';
+import { useTheme } from '../../context/ThemeContext';
+import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 
-export default function Screen() {
-   const user = useStore(state => state.user);
-   const group = useStore(state => state.group);
-   const stats = useStore(state => state.stats);
+const ProfileScreen = () => {
+  const { theme } = useTheme();
+  const isDarkMode = theme === 'dark';
 
-   return (
-      <SafeAreaView className="flex-1 bg-background-light dark:bg-background-dark items-center pt-10">
-         <Image source={{ uri: user?.avatarUrl }} className="w-32 h-32 rounded-full border-4 border-primary" />
-         <StyledText className="text-3xl font-bold mt-4 text-text-light dark:text-text-dark">{user?.username}</StyledText>
-         {group && (
-            <StyledView className="flex-row items-center mt-2 bg-primary-light px-4 py-1 rounded-full">
-               <StyledView className="w-3 h-3 rounded-full mr-2" style={{ backgroundColor: group.color }} />
-               <StyledText className="text-primary-dark font-semibold">{group.name}</StyledText>
-            </StyledView>
-         )}
+  const bgClass = isDarkMode ? "bg-background-dark" : "bg-gray-100";
+  const textClass = isDarkMode ? "text-text-primary" : "text-gray-900";
+  const secondaryTextClass = isDarkMode ? "text-text-secondary" : "text-gray-600";
+  const cardBgClass = isDarkMode ? "bg-card-dark" : "bg-white";
+  const iconColor = isDarkMode ? "white" : "black";
 
-         <StyledView className="bg-card-light dark:bg-card-dark w-11/12 p-4 rounded-2xl mt-8">
-            <StyledText className="text-xl font-bold text-text-light dark:text-text-dark">Lifetime Stats</StyledText>
-            <StyledText className="mt-2 text-subtle-light dark:text-subtle-dark">Total Distance: {(stats.totalDistance / 1000).toFixed(1)} km</StyledText>
-            <StyledText className="mt-1 text-subtle-light dark:text-subtle-dark">Total Steps: {stats.totalSteps.toLocaleString()}</StyledText>
-            <StyledText className="mt-1 text-subtle-light dark:text-subtle-dark">Current Streak: {stats.currentStreak} days 🔥</StyledText>
-         </StyledView>
+  return (
+    <SafeAreaView className={`flex-1 ${bgClass}`}>
+      <View className="flex-1 p-6">
+        <View className="flex-row justify-between items-center mb-6">
+          <Text className={`text-3xl font-bold ${textClass}`}>Profile</Text>
+          <Link href="/settings" asChild>
+            <TouchableOpacity className="p-2 rounded-full">
+              <Ionicons name="settings-outline" size={28} color={iconColor} />
+            </TouchableOpacity>
+          </Link>
+        </View>
 
-         <StyledPressable className="bg-secondary w-11/12 p-4 rounded-2xl mt-4">
-            <StyledText className="text-white text-center font-bold text-lg">Settings</StyledText>
-         </StyledPressable>
-      </SafeAreaView>
-   );
+        <View className={`rounded-xl p-6 mb-6 shadow-md ${cardBgClass}`}>
+          <View className="flex-row items-center">
+            <Image
+              source={{ uri: 'https://i.pravatar.cc/150?u=a042581f4e29026704d' }}
+              className="w-24 h-24 rounded-full mr-4 border-2 border-primary-green"
+            />
+            <View>
+              <Text className={`text-2xl font-bold ${textClass}`}>Ronak Dev</Text>
+              <Text className={`text-base ${secondaryTextClass}`}>Explorer</Text>
+            </View>
+          </View>
+          <Text className={`mt-4 text-base ${secondaryTextClass}`}>
+            "Every mile is a memory, every run a new discovery in the Runiverse."
+          </Text>
+        </View>
+
+        <View className={`rounded-xl shadow-md ${cardBgClass}`}>
+          <ProfileOption icon="trophy" text="My Achievements" isDarkMode={isDarkMode} />
+          <ProfileOption icon="route" text="Route History" isDarkMode={isDarkMode} />
+          <ProfileOption icon="user-friends" text="Friends & Community" isDarkMode={isDarkMode} />
+        </View>
+      </View>
+    </SafeAreaView>
+  );
+};
+
+interface ProfileOptionProps {
+  icon: keyof typeof FontAwesome5.glyphMap;
+  text: string;
+  isDarkMode: boolean;
 }
+
+const ProfileOption = ({ icon, text, isDarkMode }: ProfileOptionProps) => (
+  <TouchableOpacity className={`flex-row items-center py-4 px-6 border-b ${isDarkMode ? 'border-gray-700' : 'border-gray-200'} last:border-b-0`}>
+    <FontAwesome5 name={icon} size={20} color={isDarkMode ? '#FFFFFF' : '#000000'} className="mr-4" />
+    <Text className={`flex-1 text-lg ${isDarkMode ? 'text-text-primary' : 'text-gray-900'}`}>{text}</Text>
+    <Ionicons name="chevron-forward" size={20} color={isDarkMode ? '#A9A9A9' : '#666666'} />
+  </TouchableOpacity>
+);
+
+export default ProfileScreen;

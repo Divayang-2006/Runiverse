@@ -6,7 +6,7 @@ import * as Location from 'expo-location';
 import customMAP from '@/assets/Map_Json/customStyle.json';
 
 Mapbox.setAccessToken(
-   'pk.eyJ1IjoiaW1hZ2luZS14IiwiYSI6ImNtZXhnemd6ODAwZXIyanF0ZWhqM3BrM2IifQ.Leh68KuE8z7Lm70Ce60NLA'
+  'pk.eyJ1IjoiaW1hZ2luZS14IiwiYSI6ImNtZXhnemd6ODAwZXIyanF0ZWhqM3BrM2IifQ.Leh68KuE8z7Lm70Ce60NLA'
 );
 const MAPBOX_STANDARD_STYLE = "mapbox://styles/mapbox/standard-beta";
 
@@ -45,13 +45,14 @@ export default function MapScreen() {
       return dist < 0.0005; // ~50m tolerance
    };
 
-   useEffect(() => {
-      (async () => {
-         let { status } = await Location.requestForegroundPermissionsAsync();
-         if (status !== "granted") {
-            alert("Permission to access location was denied");
-            return;
-         }
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        alert("Permission to access location was denied");
+        return;
+      }
+      setLocationGranted(true);
 
          Location.watchPositionAsync(
             {

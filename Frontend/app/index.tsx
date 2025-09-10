@@ -1,11 +1,17 @@
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Link } from 'expo-router';
-import { FontAwesome } from '@expo/vector-icons';
+import { FontAwesome, Ionicons } from '@expo/vector-icons';
+import { useTheme } from '../context/ThemeContext'; // 1. Import the theme hook
 
 export default function WelcomeScreen() {
+  // 2. Get the current theme from the context
+  const { theme } = useTheme();
+  const isDarkMode = theme === 'dark';
+
   return (
-    <SafeAreaView className="flex-1 bg-background-dark">
+    // 3. Apply dynamic background color
+    <SafeAreaView className={isDarkMode ? "flex-1 bg-background-dark" : "flex-1 bg-white"}>
       <View className="flex-1 p-6 justify-between">
         {/* Background Image */}
         <Image
@@ -14,16 +20,26 @@ export default function WelcomeScreen() {
           resizeMode="cover"
         />
         <View className="absolute top-0 left-0 right-0 h-3/5 bg-black/40" />
+        
+        {/* ADDED: Settings Button */}
+        <View className="absolute top-16 right-6">
+            <Link href="/settings" asChild>
+                <TouchableOpacity className="bg-black/30 p-3 rounded-full">
+                    <Ionicons name="settings-sharp" size={24} color="white" />
+                </TouchableOpacity>
+            </Link>
+        </View>
 
         {/* Spacer to push content down */}
         <View className="h-3/5" />
 
         {/* Content */}
         <View>
-          <Text className="text-text-primary text-4xl font-bold">
+          {/* 4. Apply dynamic text colors */}
+          <Text className={isDarkMode ? "text-text-primary text-4xl font-bold" : "text-black text-4xl font-bold"}>
             Welcome to Runiverse
           </Text>
-          <Text className="text-text-secondary text-base mt-4">
+          <Text className={isDarkMode ? "text-text-secondary text-base mt-4" : "text-gray-600 text-base mt-4"}>
             Step into the Runiverse, where every stride connects you to a global community. Track your runs, conquer virtual worlds, and challenge friends.
           </Text>
         </View>
